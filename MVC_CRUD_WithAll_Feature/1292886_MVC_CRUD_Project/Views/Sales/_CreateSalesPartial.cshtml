@@ -1,0 +1,161 @@
+﻿@model _1292886_MVC_CRUD_Project.ViewModels.SalesViewModel
+
+<div class="modal-header bg-primary text-white">
+    <h5 class="modal-title fw-bold">Add New Sale</h5>
+    <button type="button" class="btn-close btn-close-white btn-close-modal"></button>
+</div>
+
+<div class="modal-body bg-light">
+    @using (Html.BeginForm("CreateSale", "Sales", FormMethod.Post, new { id = "createSaleForm", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger py-2" })
+
+        <div class="row g-4">
+            <!-- Left Side -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="mb-3 text-primary">Sale Information</h5>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.ClientName, new { @class = "form-label fw-semibold" })
+                            @Html.EditorFor(m => m.ClientName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter client name" } })
+                            @Html.ValidationMessageFor(m => m.ClientName, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.TotalPrice, new { @class = "form-label fw-semibold" })
+                            @Html.EditorFor(m => m.TotalPrice, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter total price" } })
+                            @Html.ValidationMessageFor(m => m.TotalPrice, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.SaleDate, new { @class = "form-label fw-semibold" })
+                            @Html.EditorFor(m => m.SaleDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.SaleDate, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.MobileNo, new { @class = "form-label fw-semibold" })
+                            @Html.EditorFor(m => m.MobileNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter mobile no" } })
+                            @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.PaymentTypeId, new { @class = "form-label fw-semibold" })
+                            @Html.DropDownListFor(
+                                m => m.PaymentTypeId,
+                                new SelectList(Model.PaymentMethods, "PaymentTypeId", "PaymentType"),
+                                "Select Payment Type",
+                                new { @class = "form-select" }
+                            )
+                            @Html.ValidationMessageFor(m => m.PaymentTypeId, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            @Html.CheckBoxFor(m => m.IsPaid, new { @class = "form-check-input" })
+                            @Html.LabelFor(m => m.IsPaid, new { @class = "form-check-label fw-semibold" })
+                            @Html.ValidationMessageFor(m => m.IsPaid, "", new { @class = "text-danger small d-block" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Preview Image</label>
+                            <div class="mb-2">
+                                <img id="imageFile"
+                                     src="@Url.Content("~/Images/noImg.png")"
+                                     alt="Preview"
+                                     class="img-thumbnail shadow-sm"
+                                     style="width:120px;height:120px;object-fit:cover;" />
+                            </div>
+
+                            @Html.LabelFor(m => m.ProfileFile, new { @class = "form-label fw-semibold" })
+                            <input onchange="readUrl(this)" type="file" name="ProfileFile" id="ProfileFile" class="form-control" accept=".jpg,.jpeg,.png" />
+                            @Html.ValidationMessageFor(m => m.ProfileFile, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0 text-success">Property Information</h5>
+                            <button onclick="AddProperty()" type="button" class="btn btn-warning btn-sm fw-semibold">
+                                + Add Property
+                            </button>
+                        </div>
+
+                        @Html.Partial("_AddProperties", Model.Properties != null ? Model.Properties.ToList() : new List<_1292886_MVC_CRUD_Project.ViewModels.PropertyViewModel>())
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer mt-3">
+            <button type="button" class="btn btn-outline-secondary btn-close-modal">Close</button>
+            <button type="submit" class="btn btn-success px-4">Create Sale</button>
+        </div>
+    }
+</div>
+
+<script>
+    function readUrl(i) {
+        if (i.files && i.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("#imageFile").attr('src', e.target.result);
+            };
+            reader.readAsDataURL(i.files[0]);
+        }
+    }
+
+    function deleteRow(btn) {
+        $(btn).closest('tr').remove();
+        updatePropertyIndex();
+    }
+
+    function AddProperty() {
+        var lastIndex = parseInt($('#HIndex').val() || "0");
+
+        var newRow = `
+        <tr>
+            <td>
+                <input type="hidden" name="Properties[${lastIndex}].PropertyId" value="0" />
+                <input type="text" name="Properties[${lastIndex}].PropertyType" class="form-control" placeholder="Enter property type" />
+            </td>
+            <td>
+                <input type="text" name="Properties[${lastIndex}].Location" class="form-control" placeholder="Enter location" />
+            </td>
+            <td class="text-center">
+                <button onclick="deleteRow(this)" type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+            </td>
+        </tr>`;
+
+        $("#ExTable tbody").append(newRow);
+        $('#HIndex').val(lastIndex + 1);
+        updatePropertyIndex();
+
+        if ($.validator && $.validator.unobtrusive) {
+            $.validator.unobtrusive.parse("#createSaleForm");
+        }
+    }
+
+    function updatePropertyIndex() {
+        $("#ExTable tbody tr").each(function (index) {
+            $(this).find("input[name^='Properties']").each(function () {
+                var name = $(this).attr("name");
+                name = name.replace(/Properties\[\d+\]/, "Properties[" + index + "]");
+                $(this).attr("name", name);
+            });
+        });
+
+        $('#HIndex').val($("#ExTable tbody tr").length);
+    }
+
+    if ($.validator && $.validator.unobtrusive) {
+        $.validator.unobtrusive.parse("#createSaleForm");
+    }
+</script>

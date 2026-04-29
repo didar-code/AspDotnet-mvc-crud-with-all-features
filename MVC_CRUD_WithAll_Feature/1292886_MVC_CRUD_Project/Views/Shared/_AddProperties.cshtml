@@ -1,0 +1,68 @@
+﻿@model List<_1292886_MVC_CRUD_Project.ViewModels.PropertyViewModel>
+
+<div class="table-responsive">
+    <table id="ExTable" class="table table-bordered table-hover align-middle shadow-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Property Type</th>
+                <th>Location</th>
+                <th style="width:100px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" name="Properties[@i].PropertyId" value="@Model[i].PropertyId" />
+                            <input type="text"
+                                   name="Properties[@i].PropertyType"
+                                   value="@Model[i].PropertyType"
+                                   class="form-control"
+                                   placeholder="Enter property type" />
+                        </td>
+                        <td>
+                            <input type="text"
+                                   name="Properties[@i].Location"
+                                   value="@Model[i].Location"
+                                   class="form-control"
+                                   placeholder="Enter location" />
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteRow(this)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" name="Properties[0].PropertyId" value="0" />
+                        <input type="text"
+                               name="Properties[0].PropertyType"
+                               class="form-control"
+                               placeholder="Enter property type" />
+                    </td>
+                    <td>
+                        <input type="text"
+                               name="Properties[0].Location"
+                               class="form-control"
+                               placeholder="Enter location" />
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteRow(this)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<input type="hidden" id="HIndex" value="@(Model != null && Model.Count > 0 ? Model.Count : 1)" />

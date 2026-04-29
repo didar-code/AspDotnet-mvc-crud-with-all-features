@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Property Management System</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body class="auth-body">
+
+    <div class="auth-bg" id="authBg">
+        <div class="auth-overlay">
+
+            <nav class="navbar navbar-expand-lg auth-navbar">
+                <div class="container">
+                    <a href="@Url.Action("Index", "Home")" class="navbar-brand fw-bold d-flex align-items-center">
+                        <i class="bi bi-buildings me-2"></i>
+                        Property Management System
+                    </a>
+
+                    <button class="navbar-toggler border-0 shadow-none"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#authNavbar"
+                            aria-controls="authNavbar"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="authNavbar">
+                        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2 mt-3 mt-lg-0">
+                            <li class="nav-item">
+                                <a href="@Url.Action("Index", "Home")" class="btn btn-outline-light btn-sm">
+                                    <i class="bi bi-house-door me-1"></i>Home
+                                </a>
+                            </li>
+
+                            @if (!Request.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Register", "Account")" class="btn btn-outline-light btn-sm">
+                                        <i class="bi bi-person-plus me-1"></i>Register
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Login", "Account")" class="btn btn-light btn-sm fw-semibold">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="auth-page-wrapper">
+                <div class="container">
+                    <div class="row justify-content-center align-items-center min-vh-100 g-4">
+
+                        <div class="col-lg-6 d-none d-lg-block">
+                            <div class="auth-showcase text-white pe-lg-4">
+                                <span class="badge rounded-pill bg-light text-dark px-3 py-2 mb-3">
+                                    Secure Property Platform
+                                </span>
+
+                                <h1 class="display-5 fw-bold mb-3">
+                                    Smart property sales management for modern teams
+                                </h1>
+
+                                <p class="lead opacity-75 mb-4">
+                                    Manage clients, sales records, payment methods, property summaries,
+                                    and user roles from one secure and organized platform.
+                                </p>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="auth-feature-box">
+                                            <i class="bi bi-shield-lock fs-4 mb-2"></i>
+                                            <h6 class="fw-bold mb-1">Secure Access</h6>
+                                            <p class="small mb-0 opacity-75">
+                                                Role-based authentication with protected modules.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="auth-feature-box">
+                                            <i class="bi bi-cash-stack fs-4 mb-2"></i>
+                                            <h6 class="fw-bold mb-1">Sales Tracking</h6>
+                                            <p class="small mb-0 opacity-75">
+                                                Track payments, clients, and sales records with ease.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="auth-feature-box">
+                                            <i class="bi bi-house-check fs-4 mb-2"></i>
+                                            <h6 class="fw-bold mb-1">Property Overview</h6>
+                                            <p class="small mb-0 opacity-75">
+                                                View property type, location, and recent activity quickly.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="auth-feature-box">
+                                            <i class="bi bi-bar-chart-line fs-4 mb-2"></i>
+                                            <h6 class="fw-bold mb-1">Better Insights</h6>
+                                            <p class="small mb-0 opacity-75">
+                                                Use dashboards and summaries to support decisions.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5 col-md-10 col-sm-12">
+                            @RenderBody()
+                        </div>
+
+                    </div>
+                </div>
+            </main>
+
+            <div class="auth-bottom-bar text-center text-white-50 small py-3">
+                &copy; @DateTime.Now.Year - Property Management System
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        const bgImages = [
+            '/Images/Aprt.jpg',
+            '/Images/build.jpg',
+            '/Images/home.jpg',
+            '/Images/land.jpg',
+            '/Images/build2.jpg'
+        ];
+
+        let currentIndex = 0;
+        const bgElement = document.getElementById("authBg");
+
+        function changeBackground() {
+            if (!bgElement || bgImages.length === 0) return;
+            bgElement.style.backgroundImage = "url('" + bgImages[currentIndex] + "')";
+            currentIndex = (currentIndex + 1) % bgImages.length;
+        }
+
+        changeBackground();
+        setInterval(changeBackground, 5000);
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

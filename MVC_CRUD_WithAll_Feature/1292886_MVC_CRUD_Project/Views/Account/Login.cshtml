@@ -1,0 +1,121 @@
+﻿@model _1292886_MVC_CRUD_Project.ViewModels.LoginVm
+@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewBag.Title = "Login";
+}
+
+<div class="auth-shell">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <div class="mb-3">
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle shadow-sm"
+                      style="width:72px;height:72px;background:linear-gradient(135deg,#0d6efd,#3b82f6);color:#fff;">
+                    <i class="bi bi-shield-lock fs-2"></i>
+                </span>
+            </div>
+
+            <h1 class="auth-title mb-2">Welcome Back</h1>
+            <p class="auth-subtitle">
+                Sign in to access your property sales dashboard
+            </p>
+        </div>
+
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm", autocomplete = "off" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("returnUrl", ViewBag.ReturnUrl as string)
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger py-2 px-3 small mb-3 border-0 shadow-sm" })
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.UserName, new { @class = "form-label fw-semibold" })
+
+                <div class="input-group input-group-lg shadow-sm rounded-3">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-person"></i>
+                    </span>
+
+                    @Html.TextBoxFor(m => m.UserName, new
+                    {
+                        @class = "form-control border-start-0",
+                        placeholder = "Enter username",
+                        autocomplete = "username"
+                    })
+                </div>
+
+                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger small mt-1 d-block" })
+            </div>
+
+            <div class="mb-3 position-relative">
+                @Html.LabelFor(m => m.Password, new { @class = "form-label fw-semibold" })
+
+                <div class="input-group input-group-lg shadow-sm rounded-3">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-key"></i>
+                    </span>
+
+                    @Html.PasswordFor(m => m.Password, new
+                    {
+                        @class = "form-control border-start-0 pe-5",
+                        placeholder = "Enter password",
+                        id = "passwordInput",
+                        autocomplete = "current-password"
+                    })
+                </div>
+
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small mt-1 d-block" })
+
+                <button type="button" class="password-toggle-btn" id="togglePassword">
+                    Show
+                </button>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3 small">
+                <span class="text-muted">
+                    Secure access for authorized users only
+                </span>
+                <a href="@Url.Action("Index", "Home")" class="text-decoration-none fw-semibold">
+                    Back to Home
+                </a>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm" id="loginBtn">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                </button>
+            </div>
+
+            <div class="text-center auth-footer-links">
+                <span class="text-muted">New user?</span>
+                <a href="@Url.Action("Register", "Account")" class="ms-1 fw-semibold">Register</a>
+            </div>
+        }
+
+        <hr class="my-4" />
+
+        <div class="text-center">
+            <small class="text-muted">
+                Property Management System • Secure Sign In
+            </small>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#togglePassword").on("click", function () {
+                var input = $("#passwordInput");
+                var isPassword = input.attr("type") === "password";
+
+                input.attr("type", isPassword ? "text" : "password");
+                $(this).text(isPassword ? "Hide" : "Show");
+            });
+
+            $("#loginForm").on("submit", function () {
+                $("#loginBtn")
+                    .prop("disabled", true)
+                    .html('<span class="spinner-border spinner-border-sm me-2"></span>Signing in...');
+            });
+        });
+    </script>
+}

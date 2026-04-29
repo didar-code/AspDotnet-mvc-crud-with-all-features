@@ -1,0 +1,98 @@
+﻿@model _1292886_MVC_CRUD_Project.ViewModels.RegisterVm
+@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewBag.Title = "Register";
+}
+
+<div class="auth-shell">
+    <div class="auth-card">
+
+        <div class="text-center mb-4">
+            <h1 class="auth-title">Create Account</h1>
+            <p class="auth-subtitle">Register to access the property management system</p>
+        </div>
+
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { id = "registerForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger small mb-3" })
+
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.UserName, new { @class = "form-label fw-semibold" })
+                @Html.TextBoxFor(m => m.UserName, new
+                {
+                    @class = "form-control form-control-lg",
+                    placeholder = "Enter username",
+                    autocomplete = "username"
+                })
+                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger small" })
+            </div>
+
+            <div class="mb-3 position-relative">
+                @Html.LabelFor(m => m.Password, new { @class = "form-label fw-semibold" })
+                @Html.PasswordFor(m => m.Password, new
+                {
+                    @class = "form-control form-control-lg pe-5",
+                    placeholder = "Enter password",
+                    id = "passwordInput"
+                })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+
+                <button type="button" class="password-toggle-btn" id="togglePassword">Show</button>
+            </div>
+
+      
+            <div class="mb-3 position-relative">
+                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label fw-semibold" })
+                @Html.PasswordFor(m => m.ConfirmPassword, new
+                {
+                    @class = "form-control form-control-lg pe-5",
+                    placeholder = "Confirm password",
+                    id = "confirmPasswordInput"
+                })
+                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger small" })
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg" id="registerBtn">
+                    Create Account
+                </button>
+            </div>
+
+            
+            <div class="text-center auth-footer-links">
+                <span class="text-muted">Already have an account?</span>
+                <a href="@Url.Action("Login", "Account")" class="ms-1">Login</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(function () {
+
+            $("#togglePassword").on("click", function () {
+
+                var input = $("#passwordInput");
+
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                    $(this).text("Hide");
+                } else {
+                    input.attr("type", "password");
+                    $(this).text("Show");
+                }
+
+            });
+
+            $("#registerForm").on("submit", function () {
+                $("#registerBtn").prop("disabled", true).text("Creating account...");
+            });
+
+        });
+
+    </script>
+}

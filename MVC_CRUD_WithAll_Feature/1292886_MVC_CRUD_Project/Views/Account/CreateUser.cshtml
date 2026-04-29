@@ -1,0 +1,98 @@
+﻿@model _1292886_MVC_CRUD_Project.ViewModels.RegisterVm
+
+@{
+    ViewBag.Title = "Create User";
+    var roles = ViewBag.Roles as List<_1292886_MVC_CRUD_Project.Models.TblRole>;
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white py-3">
+                <h3 class="mb-0">Create User</h3>
+                <small class="text-light">Admin can create a new system user from here.</small>
+            </div>
+
+            <div class="card-body p-4">
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                @using (Html.BeginForm("CreateUser", "Account", FormMethod.Post, new { id = "createUserForm" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.UserName, new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(m => m.UserName, new
+                        {
+                            @class = "form-control",
+                            placeholder = "Enter username",
+                            autocomplete = "username"
+                        })
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-3 position-relative">
+                        @Html.LabelFor(m => m.Password, new { @class = "form-label fw-semibold" })
+                        @Html.PasswordFor(m => m.Password, new
+                        {
+                            @class = "form-control pe-5",
+                            placeholder = "Enter password",
+                            id = "passwordInput"
+                        })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+
+                        <button type="button" class="password-toggle-btn" id="togglePassword">Show</button>
+                    </div>
+
+                    <div class="mb-3 position-relative">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label fw-semibold" })
+                        @Html.PasswordFor(m => m.ConfirmPassword, new
+                        {
+                            @class = "form-control pe-5",
+                            placeholder = "Confirm password",
+                            id = "confirmPasswordInput"
+                        })
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Role</label>
+                        <select name="RoleId" class="form-select">
+                            <option value="0">Select Role</option>
+                            @if (roles != null)
+                            {
+                                foreach (var r in roles)
+                                {
+                                    <option value="@r.Id">@r.RoleName</option>
+                                }
+                            }
+                        </select>
+                        @Html.ValidationMessage("RoleId", "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-primary px-4" id="createUserBtn">Create User</button>
+                        <a href="@Url.Action("Index", "Sales")" class="btn btn-outline-secondary">Back to Sales</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#togglePassword").on("click", function () {
+                var input = $("#passwordInput");
+                var isPassword = input.attr("type") === "password";
+                input.attr("type", isPassword ? "text" : "password");
+                $(this).text(isPassword ? "Hide" : "Show");
+            });
+
+            $("#createUserForm").on("submit", function () {
+                $("#createUserBtn").prop("disabled", true).text("Creating...");
+            });
+        });
+    </script>
+}
